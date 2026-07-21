@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mysql://swiggy-mysql:3306/order_service_db
+
+assignment-service:
+  base-url: http://assignment-service:8083

@@ -13,6 +13,9 @@ target/
 # Logs
 *.log
 
+# Zip
+*.zip
+
 # Environment secrets (we'll add real ones later, never commit them)
 .env
 application-local-secrets.yml

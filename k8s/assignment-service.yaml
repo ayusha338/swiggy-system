@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: assignment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: assignment-service
+  template:
+    metadata:
+      labels:
+        app: assignment-service
+    spec:
+      containers:
+        - name: assignment-service
+          image: assignment-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: assignment-service
+spec:
+  selector:
+    app: assignment-service
+  ports:
+    - port: 8083
+      targetPort: 8083
+  type: NodePort
