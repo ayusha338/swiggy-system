@@ -18,3 +18,14 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 assignment-service:
   base-url: http://localhost:8083
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
