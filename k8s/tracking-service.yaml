@@ -24,12 +24,12 @@ spec:
               port: 8084
             initialDelaySeconds: 15
             periodSeconds: 10
-            livenessProbe:
-              httpGet:
-                path: /actuator/health/liveness
-                port: 8084
-              initialDelaySeconds: 20
-              periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8084
+            initialDelaySeconds: 25
+            periodSeconds: 15
 ---
 apiVersion: v1
 kind: Service

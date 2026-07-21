@@ -30,13 +30,22 @@ spec:
             - containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: rootpass123
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_ROOT_PASSWORD
             - name: MYSQL_DATABASE
               value: order_service_db
             - name: MYSQL_USER
-              value: swiggy_user
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_USER
             - name: MYSQL_PASSWORD
-              value: swiggy_pass123
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
           volumeMounts:
             - name: mysql-storage
               mountPath: /var/lib/mysql
