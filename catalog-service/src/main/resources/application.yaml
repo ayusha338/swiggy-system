@@ -15,3 +15,7 @@ management:
       enabled: true
     readinessState:
       enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
