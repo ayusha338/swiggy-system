@@ -1,5 +1,6 @@
 package com.swiggysystem.orderservice.security;
 
+import com.swiggysystem.orderservice.ratelimit.RateLimitFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
 
+    private final RateLimitFilter rateLimitFilter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -26,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/orders/checkout").authenticated()
                         .anyRequest().permitAll()   // baaki sab abhi ke liye open, dheere dheere lock karenge
                 )
+                .addFilterBefore(rateLimitFilter,JwtAuthFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
