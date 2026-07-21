@@ -26,7 +26,8 @@ public class SseEmitterRegistry {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         String channel = CHANNEL_PREFIX + riderId;
 
-        MessageListener listener = (message, pattern) -> pushToEmitter(emitter, message);
+        MessageListener listener = (message, pattern)
+                -> pushToEmitter(emitter, message);
 
         redisMessageListenerContainer.addMessageListener(listener, new ChannelTopic(channel));
 
