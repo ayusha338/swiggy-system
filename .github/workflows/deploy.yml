@@ -32,6 +32,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Debug - test exact path
+        shell: powershell
+        run: |
+          $path = "${{ github.workspace }}/swiggy-chart/values.yaml"
+          Write-Host "Testing path: $path"
+          Test-Path $path
+
       - name: Debug - list workspace contents
         shell: powershell
         run: |
