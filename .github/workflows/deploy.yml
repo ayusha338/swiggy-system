@@ -61,5 +61,5 @@ jobs:
       - name: Verify rollout - api-gateway
         run: kubectl rollout status deployment/api-gateway --timeout=180s
 
-      - name: Verify rollout - order-service (Argo Rollout)
-        run: kubectl get rollout order-service
+      - name: Verify rollout - order-service
+        run: kubectl rollout status deployment/order-service --timeout=180s
