@@ -20,16 +20,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())   // stateless API, CSRF tokens ki zaroorat nahi
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        // health checks/prometheus ko auth na chahiye
                         .requestMatchers("/api/orders/checkout").authenticated()
-                        .anyRequest().permitAll()   // baaki sab abhi ke liye open, dheere dheere lock karenge
+                        .anyRequest().permitAll()
                 )
-                .addFilterBefore(rateLimitFilter,JwtAuthFilter.class)
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
