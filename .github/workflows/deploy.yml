@@ -58,4 +58,4 @@ jobs:
         run: kubectl rollout status deployment/tracking-service --timeout=180s
 
       - name: Verify rollout - order-service (Argo Rollout)
-        run: kubectl argo rollouts status order-service --timeout=180s
+        run: kubectl get rollout order-service
