@@ -26,8 +26,7 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-
-    private final AssignmentServiceClient assignmentServiceClient;
+    private final AssignmentServiceCaller assignmentServiceCaller;   // ab seedha AssignmentServiceClient nahi, is naye bean ke through jaate hain
 
     @Transactional
     public OrderResponse checkout(CheckoutRequest request) {
@@ -73,13 +72,16 @@ public class OrderService {
 
         // Step 5: save karo - cascade = ALL hone ki wajah se items aur payment bhi save ho jayenge
         Order savedOrder = orderRepository.save(order);
+
+        // Step 6: nearby riders dhundo - ab circuit breaker ke through, alag bean se
         try {
             List<RiderCandidateResponse> nearbyRiders =
-                    assignmentServiceClient.findNearbyRiders(12.9716, 77.5946, 3);   // restaurant coords - hardcoded for now
+                    assignmentServiceCaller.findNearbyRiders(12.9716, 77.5946, 3);
             log.info("Found {} nearby riders for order {}", nearbyRiders.size(), savedOrder.getId());
         } catch (Exception e) {
-            log.warn("Could not reach assignment-service, order still placed: {}", e.getMessage());
+            log.warn("Unexpected error calling assignment-service: {}", e.getMessage());
         }
+
         return OrderResponse.fromEntity(savedOrder);
     }
 

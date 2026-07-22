@@ -51,3 +51,12 @@ management:
     export:
       otlp:
         enabled: false
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      assignmentService:
+        sliding-window-size: 10          # pichle 10 calls ka record rakho
+        failure-rate-threshold: 50       # agar 50% se zyada fail hue, circuit khol do
+        wait-duration-in-open-state: 30s # 30 second tak koi call try hi mat karo
+        permitted-number-of-calls-in-half-open-state: 3   # cooldown ke baad, 3 test calls try karo
