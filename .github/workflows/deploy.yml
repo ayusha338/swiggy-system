@@ -3,6 +3,7 @@ name: Build and Deploy Swiggy System
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,12 +25,18 @@ jobs:
         run: docker build --no-cache -f ${{ github.workspace }}/${{ matrix.service }}/Dockerfile -t ${{ matrix.service }}:${{ steps.version.outputs.TAG }} ${{ github.workspace }}
 
   deploy:
-    needs: build
+    # needs: build   # TEMPORARILY disabled for fast debug iteration - re-enable once path issue is fixed
     runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Debug - list workspace contents
+        shell: powershell
+        run: |
+          Write-Host "github.workspace = ${{ github.workspace }}"
+          Get-ChildItem ${{ github.workspace }}
 
       - name: Set version tag
         id: version
