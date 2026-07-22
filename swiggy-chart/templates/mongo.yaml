@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.mongo.storage }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swiggy-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swiggy-mongo
+  template:
+    metadata:
+      labels:
+        app: swiggy-mongo
+    spec:
+      containers:
+        - name: mongo
+          image: {{ .Values.mongo.image }}
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /data/db
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swiggy-mongo
+spec:
+  selector:
+    app: swiggy-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017

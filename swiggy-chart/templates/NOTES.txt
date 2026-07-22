@@ -1,0 +1,16 @@
+Swiggy System has been deployed.
+
+Check status of all pods:
+  kubectl get pods
+
+Check assigned NodePorts for each service:
+  kubectl get svc
+
+To upgrade after rebuilding an image or changing values.yaml:
+  helm upgrade swiggy ./helm/swiggy-chart
+
+To uninstall everything:
+  helm uninstall swiggy
+
+Grafana login: admin / (see values.yaml -> secrets.grafanaAdminPassword)
+Prometheus targets: http://localhost:<prometheus-nodeport>/targets

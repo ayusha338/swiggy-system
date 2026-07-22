@@ -1,0 +1,66 @@
+# ---------- Application services ----------
+#orderService:
+#  replicas: 1
+#  image: order-service:v3
+#  port: 8081
+
+#orderService:
+#  blueReplicas: 1
+#  greenReplicas: 1
+#  blueImage: order-service:v3
+#  greenImage: order-service:v4
+#  activeVersion: green
+#  port: 8081
+
+orderService:
+  replicas: 2
+  image: order-service:v7.1
+  port: 8081
+
+catalogService:
+  replicas: 1
+  image: catalog-service:v7.1
+  port: 8082
+
+assignmentService:
+  replicas: 1
+  image: assignment-service:v7.1
+  port: 8083
+
+trackingService:
+  replicas: 1
+  image: tracking-service:v7.1
+  port: 8084
+
+# ---------- Infrastructure ----------
+mysql:
+  image: mysql:8.0
+  storage: 1Gi
+  database: order_service_db
+
+mongo:
+  image: mongo:7.0
+  storage: 1Gi
+
+redis:
+  image: redis:7.2
+
+kafka:
+  image: apache/kafka:4.2.1
+  clusterId: MkU3OEVBNTcwNTJENDM2Qg
+
+# ---------- Monitoring ----------
+prometheus:
+  image: prom/prometheus:latest
+  port: 9090
+
+grafana:
+  image: grafana/grafana:latest
+  port: 3000
+
+# ---------- Secrets (imperative-friendly defaults; override via --set or a separate values file in real use) ----------
+secrets:
+  mysqlRootPassword: rootpass123
+  mysqlUser: swiggy_user
+  mysqlPassword: swiggy_pass123
+  grafanaAdminPassword: admin123

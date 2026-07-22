@@ -1,0 +1,5 @@
+apiVersion: v2
+name: swiggy-system
+description: Helm chart for the Swiggy-style microservices system (Order, Catalog, Assignment, Tracking services + MySQL, MongoDB, Redis, Kafka, Prometheus, Grafana)
+version: 1.0.0
+appVersion: "1.0.0"
