@@ -14,7 +14,7 @@
 
 orderService:
   replicas: 2
-  image: order-service:v7.1
+  image: order-service:v-tracing-fix
   port: 8081
 
 catalogService:

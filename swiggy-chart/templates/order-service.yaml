@@ -1,5 +1,5 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: order-service
 spec:
@@ -41,14 +41,12 @@ spec:
               port: {{ .Values.orderService.port }}
             initialDelaySeconds: 20
             periodSeconds: 15
-  strategy:
-    canary:
-      steps:
-        - setWeight: 20
-        - pause: {duration: 60}
-        - setWeight: 50
-        - pause: {duration: 60}
-        - setWeight: 100
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+      volumes:
+        - name: logs
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

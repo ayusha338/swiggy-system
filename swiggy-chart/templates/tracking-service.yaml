@@ -30,6 +30,12 @@ spec:
               port: {{ .Values.trackingService.port }}
             initialDelaySeconds: 30
             periodSeconds: 15
+          volumeMounts:
+            - name: logs
+              mountPath: /app/logs
+      volumes:
+        - name: logs
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service

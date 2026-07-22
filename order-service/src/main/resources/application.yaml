@@ -1,7 +1,14 @@
 server:
   port: 8081
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /app/logs
+      pattern: '%h %l %u %t "%r" %s %b %D'
 
 spring:
+  application:
+    name: order-service
   datasource:
     url: jdbc:mysql://localhost:3307/order_service_db
     username: ${DB_USERNAME}

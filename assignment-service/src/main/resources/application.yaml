@@ -1,5 +1,10 @@
 server:
   port: 8083
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: /app/logs
+      pattern: '%h %l %u %t "%r" %s %b %D'
 
 spring:
   application:
