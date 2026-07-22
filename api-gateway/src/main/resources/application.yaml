@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: order-service
+              uri: http://order-service:8081
+              predicates:
+                - Path=/api/orders/**,/api/auth/**
+
+            - id: catalog-service
+              uri: http://catalog-service:8082
+              predicates:
+                - Path=/api/restaurants/**
+
+            - id: assignment-service
+              uri: http://assignment-service:8083
+              predicates:
+                - Path=/api/riders/**
+
+            - id: tracking-service
+              uri: http://tracking-service:8084
+              predicates:
+                - Path=/api/tracking/**
