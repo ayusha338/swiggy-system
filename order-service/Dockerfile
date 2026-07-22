@@ -10,6 +10,7 @@ COPY order-service/pom.xml order-service/pom.xml
 COPY catalog-service/pom.xml catalog-service/pom.xml
 COPY assignment-service/pom.xml assignment-service/pom.xml
 COPY tracking-service/pom.xml tracking-service/pom.xml
+COPY api-gateway/pom.xml api-gateway/pom.xml
 
 # Sirf order-service ke liye dependencies download karo (offline mode ke bina)
 RUN mvn -pl order-service -am dependency:go-offline
