@@ -58,6 +58,11 @@ grafana:
   image: grafana/grafana:latest
   port: 3000
 
+apiGateway:
+  replicas: 1
+  image: api-gateway:latest
+  port: 8080
+
 # ---------- Secrets (imperative-friendly defaults; override via --set or a separate values file in real use) ----------
 secrets:
   mysqlRootPassword: rootpass123
