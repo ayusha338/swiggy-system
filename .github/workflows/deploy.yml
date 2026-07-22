@@ -10,7 +10,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        service: [order-service, catalog-service, assignment-service, tracking-service]
+        service: [order-service, catalog-service, assignment-service, tracking-service, api-gateway]
 
     steps:
       - name: Checkout code
@@ -44,6 +44,7 @@ jobs:
           (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'catalog-service:.*', 'catalog-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
           (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'assignment-service:.*', 'assignment-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
           (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'tracking-service:.*', 'tracking-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
+          (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'api-gateway:.*', 'api-gateway:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
 
       - name: Deploy via Helm
         run: helm upgrade swiggy ${{ github.workspace }}/swiggy-chart
@@ -56,6 +57,9 @@ jobs:
 
       - name: Verify rollout - tracking-service
         run: kubectl rollout status deployment/tracking-service --timeout=180s
+
+      - name: Verify rollout - api-gateway
+        run: kubectl rollout status deployment/api-gateway --timeout=180s
 
       - name: Verify rollout - order-service (Argo Rollout)
         run: kubectl get rollout order-service
