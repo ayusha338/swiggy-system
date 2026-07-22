@@ -19,3 +19,11 @@ management:
     web:
       exposure:
         include: health,prometheus
+otel:
+  service:
+    name: catalog-service   # different per service - catalog-service, assignment-service, tracking-service
+  exporter:
+    otlp:
+      endpoint: http://jaeger:4318
+  traces:
+    exporter: otlp
