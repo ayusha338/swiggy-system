@@ -5,7 +5,26 @@ on:
     branches: [main]
 
 jobs:
-  build-and-deploy:
+  build:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        service: [order-service, catalog-service, assignment-service, tracking-service]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set version tag
+        id: version
+        shell: powershell
+        run: echo "TAG=v${{ github.run_number }}" >> $env:GITHUB_OUTPUT
+
+      - name: Build ${{ matrix.service }} image
+        run: docker build --no-cache -f ${{ github.workspace }}/${{ matrix.service }}/Dockerfile -t ${{ matrix.service }}:${{ steps.version.outputs.TAG }} ${{ github.workspace }}
+
+  deploy:
+    needs: build
     runs-on: self-hosted
 
     steps:
@@ -17,28 +36,16 @@ jobs:
         shell: powershell
         run: echo "TAG=v${{ github.run_number }}" >> $env:GITHUB_OUTPUT
 
-      - name: Build order-service image
-        run: docker build --no-cache -f order-service/Dockerfile -t order-service:${{ steps.version.outputs.TAG }} .
-
-      - name: Build catalog-service image
-        run: docker build --no-cache -f catalog-service/Dockerfile -t catalog-service:${{ steps.version.outputs.TAG }} .
-
-      - name: Build assignment-service image
-        run: docker build --no-cache -f assignment-service/Dockerfile -t assignment-service:${{ steps.version.outputs.TAG }} .
-
-      - name: Build tracking-service image
-        run: docker build --no-cache -f tracking-service/Dockerfile -t tracking-service:${{ steps.version.outputs.TAG }} .
-
       - name: Update values.yaml with new tags
         shell: powershell
         run: |
-          (Get-Content swiggy-chart/values.yaml) -replace 'order-service:.*', 'order-service:${{ steps.version.outputs.TAG }}' | Set-Content swiggy-chart/values.yaml
-          (Get-Content swiggy-chart/values.yaml) -replace 'catalog-service:.*', 'catalog-service:${{ steps.version.outputs.TAG }}' | Set-Content swiggy-chart/values.yaml
-          (Get-Content swiggy-chart/values.yaml) -replace 'assignment-service:.*', 'assignment-service:${{ steps.version.outputs.TAG }}' | Set-Content swiggy-chart/values.yaml
-          (Get-Content swiggy-chart/values.yaml) -replace 'tracking-service:.*', 'tracking-service:${{ steps.version.outputs.TAG }}' | Set-Content swiggy-chart/values.yaml
+          (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'order-service:.*', 'order-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
+          (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'catalog-service:.*', 'catalog-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
+          (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'assignment-service:.*', 'assignment-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
+          (Get-Content ${{ github.workspace }}/swiggy-chart/values.yaml) -replace 'tracking-service:.*', 'tracking-service:${{ steps.version.outputs.TAG }}' | Set-Content ${{ github.workspace }}/swiggy-chart/values.yaml
 
       - name: Deploy via Helm
-        run: helm upgrade swiggy ./swiggy-chart
+        run: helm upgrade swiggy ${{ github.workspace }}/swiggy-chart
 
       - name: Verify rollout - catalog-service
         run: kubectl rollout status deployment/catalog-service --timeout=120s
