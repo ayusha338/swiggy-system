@@ -14,7 +14,8 @@ jobs:
 
       - name: Set version tag
         id: version
-        run: echo "TAG=v${{ github.run_number }}" >> $GITHUB_OUTPUT
+        shell: pwsh
+        run: echo "TAG=v${{ github.run_number }}" >> $env:GITHUB_OUTPUT
 
       - name: Build order-service image
         run: docker build --no-cache -f order-service/Dockerfile -t order-service:${{ steps.version.outputs.TAG }} .
