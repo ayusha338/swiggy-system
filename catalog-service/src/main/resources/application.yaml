@@ -1,10 +1,12 @@
 server:
   port: 8082
+
 spring:
   application:
     name: catalog-service
   mongodb:
     uri: mongodb://localhost:27017/catalog_service_db
+
 management:
   endpoint:
     health:
@@ -19,11 +21,13 @@ management:
     web:
       exposure:
         include: health,prometheus
-otel:
-  service:
-    name: catalog-service   # different per service - catalog-service, assignment-service, tracking-service
-  exporter:
-    otlp:
-      endpoint: http://jaeger:4318
-  traces:
-    exporter: otlp
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://jaeger:4318/v1/traces
+  metrics:
+    export:
+      otlp:
+        enabled: false
